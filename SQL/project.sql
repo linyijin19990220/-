@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2018 年 08 月 27 日 08:05
+-- 產生時間： 2018 年 08 月 27 日 10:23
 -- 伺服器版本: 10.1.34-MariaDB
 -- PHP 版本： 7.2.7
 
@@ -15,6 +15,8 @@ SET time_zone = "+00:00";
 --
 -- 資料庫： `project`
 --
+CREATE DATABASE IF NOT EXISTS `project` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `project`;
 
 -- --------------------------------------------------------
 
@@ -36,7 +38,7 @@ CREATE TABLE `available_designer` (
 
 CREATE TABLE `cq2_number` (
   `numplate` int(4) NOT NULL,
-  `numTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `numTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `robNo` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
   `callState` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
   `handleState` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
@@ -199,3 +201,7 @@ ALTER TABLE `match_rob`
   ADD CONSTRAINT `rob_Fkey` FOREIGN KEY (`robNo`) REFERENCES `robot` (`robNo`),
   ADD CONSTRAINT `sto_Fkey` FOREIGN KEY (`stoNo`) REFERENCES `store` (`stoNo`);
 COMMIT;
+
+
+
+CREATE TABLE `project`.`attendance` ( `desNo` VARCHAR(11) NOT NULL , `stoNo` VARCHAR(4) NOT NULL , `clock_in` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) , `clock_out` TIMESTAMP(6) NULL DEFAULT CURRENT_TIMESTAMP(6) ) ENGINE = InnoDB;
