@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2018 年 08 月 17 日 05:55
+-- 產生時間： 2018 年 08 月 27 日 08:05
 -- 伺服器版本: 10.1.34-MariaDB
 -- PHP 版本： 7.2.7
 
@@ -80,6 +80,14 @@ CREATE TABLE `match_rob` (
   `stoNo` varchar(4) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- 資料表的匯出資料 `match_rob`
+--
+
+INSERT INTO `match_rob` (`robNo`, `stoNo`) VALUES
+('R001', '1'),
+('R002', '2');
+
 -- --------------------------------------------------------
 
 --
@@ -90,6 +98,14 @@ CREATE TABLE `robot` (
   `robNo` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
   `robState` varchar(4) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- 資料表的匯出資料 `robot`
+--
+
+INSERT INTO `robot` (`robNo`, `robState`) VALUES
+('R001', ''),
+('R002', '');
 
 -- --------------------------------------------------------
 
@@ -145,14 +161,14 @@ ALTER TABLE `designer`
 -- 資料表索引 `match_rob`
 --
 ALTER TABLE `match_rob`
-  ADD UNIQUE `robNo` (`robNo`),
-  ADD UNIQUE `stoNo` (`stoNo`);
+  ADD UNIQUE KEY `robNo` (`robNo`),
+  ADD UNIQUE KEY `stoNo` (`stoNo`);
 
 --
 -- 資料表索引 `robot`
 --
 ALTER TABLE `robot`
-  ADD PRIMARY KEY  (`robNo`);
+  ADD PRIMARY KEY (`robNo`);
 
 --
 -- 資料表索引 `store`
