@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2018 年 08 月 27 日 10:23
+-- 產生時間： 2018 年 09 月 25 日 08:42
 -- 伺服器版本: 10.1.34-MariaDB
 -- PHP 版本： 7.2.7
 
@@ -21,13 +21,14 @@ USE `project`;
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `available_designer`
+-- 資料表結構 `attendance`
 --
 
-CREATE TABLE `available_designer` (
+CREATE TABLE `attendance` (
   `desNo` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
-  `desState` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `finishTime` datetime(6) NOT NULL
+  `stoNo` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
+  `clock_in` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `clock_out` timestamp(6) NULL DEFAULT CURRENT_TIMESTAMP(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -93,6 +94,18 @@ INSERT INTO `match_rob` (`robNo`, `stoNo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- 資料表結構 `on_duty_designer`
+--
+
+CREATE TABLE `on_duty_designer` (
+  `desNo` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
+  `desState` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
+  `finishTime` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- 資料表結構 `robot`
 --
 
@@ -140,10 +153,11 @@ INSERT INTO `store` (`stoNo`, `stoCity`, `stoAddress`, `stoName`) VALUES
 --
 
 --
--- 資料表索引 `available_designer`
+-- 資料表索引 `attendance`
 --
-ALTER TABLE `available_designer`
-  ADD PRIMARY KEY (`desNo`);
+ALTER TABLE `attendance`
+  ADD KEY `att_des_index` (`desNo`),
+  ADD KEY `att_sto_index` (`stoNo`);
 
 --
 -- 資料表索引 `cq2_number`
@@ -151,7 +165,8 @@ ALTER TABLE `available_designer`
 ALTER TABLE `cq2_number`
   ADD UNIQUE KEY `CQ2_number_index` (`numplate`,`numTime`,`robNo`),
   ADD KEY `numplate` (`numplate`),
-  ADD KEY `desNo` (`desNo`);
+  ADD KEY `desNo` (`desNo`),
+  ADD KEY `robNo` (`robNo`);
 
 --
 -- 資料表索引 `designer`
@@ -165,6 +180,12 @@ ALTER TABLE `designer`
 ALTER TABLE `match_rob`
   ADD UNIQUE KEY `robNo` (`robNo`),
   ADD UNIQUE KEY `stoNo` (`stoNo`);
+
+--
+-- 資料表索引 `on_duty_designer`
+--
+ALTER TABLE `on_duty_designer`
+  ADD PRIMARY KEY (`desNo`);
 
 --
 -- 資料表索引 `robot`
@@ -183,16 +204,18 @@ ALTER TABLE `store`
 --
 
 --
--- 資料表的 Constraints `available_designer`
+-- 資料表的 Constraints `attendance`
 --
-ALTER TABLE `available_designer`
-  ADD CONSTRAINT `des_Fkey` FOREIGN KEY (`desNo`) REFERENCES `designer` (`desNo`);
+ALTER TABLE `attendance`
+  ADD CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`stoNo`) REFERENCES `store` (`stoNo`),
+  ADD CONSTRAINT `attendance_ibfk_2` FOREIGN KEY (`desNo`) REFERENCES `on_duty_designer` (`desNo`);
 
 --
 -- 資料表的 Constraints `cq2_number`
---
+-- 
 ALTER TABLE `cq2_number`
-  ADD CONSTRAINT `ava_designer_Fkey` FOREIGN KEY (`desNo`) REFERENCES `available_designer` (`desNo`);
+  ADD CONSTRAINT `ava_designer_Fkey` FOREIGN KEY (`desNo`) REFERENCES `on_duty_designer` (`desNo`),
+  ADD CONSTRAINT `cq2_number_ibfk_1` FOREIGN KEY (`robNo`) REFERENCES `match_rob` (`robNo`);
 
 --
 -- 資料表的 Constraints `match_rob`
@@ -200,8 +223,10 @@ ALTER TABLE `cq2_number`
 ALTER TABLE `match_rob`
   ADD CONSTRAINT `rob_Fkey` FOREIGN KEY (`robNo`) REFERENCES `robot` (`robNo`),
   ADD CONSTRAINT `sto_Fkey` FOREIGN KEY (`stoNo`) REFERENCES `store` (`stoNo`);
+
+--
+-- 資料表的 Constraints `on_duty_designer`
+--
+ALTER TABLE `on_duty_designer`
+  ADD CONSTRAINT `des_Fkey` FOREIGN KEY (`desNo`) REFERENCES `designer` (`desNo`);
 COMMIT;
-
-
-
-CREATE TABLE `project`.`attendance` ( `desNo` VARCHAR(11) NOT NULL , `stoNo` VARCHAR(4) NOT NULL , `clock_in` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) , `clock_out` TIMESTAMP(6) NULL DEFAULT CURRENT_TIMESTAMP(6) ) ENGINE = InnoDB;
