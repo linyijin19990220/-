@@ -15,7 +15,7 @@
     $store = new Store($db);
     
     // query products
-    $stmt = $store->read();
+    $stmt = $store->readrob();
     $num = $stmt->rowCount();
     
     // check if more than 0 record found
@@ -38,7 +38,8 @@
                 "stoNo" => $stoNo,
                 "stoCity" => $stoCity,
                 "stoAddress" => $stoAddress,
-                "stoName" => $stoName
+                "stoName" => $stoName,
+                "robNo"=> $robNo
             );
 
             array_push($stores_arr["records"], $store_item);
@@ -48,13 +49,12 @@
         $stores_arr=array_unique($stores_arr);
         
         echo json_encode($stores_arr);
-
     }
     
     else{
         echo json_encode(
             array("message" => "No products found.")
-        );
-        mysql_close($store);
-    }
+    );
+    mysql_close($store);
+}
 ?>

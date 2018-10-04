@@ -31,6 +31,6 @@ $designer_arr = array(
     "desAddress" => $designer->desAddress
 ); 
 
-// make it json format
+// make it json formatqc  
 print_r(json_encode($designer_arr));
 ?>
