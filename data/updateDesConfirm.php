@@ -13,17 +13,17 @@
         $selected = mysqli_select_db($con, "project") ;
         //mysql_select_db("project", $con);
 
-        $sql="INSERT INTO on_duty_designer (desNo, stoNo, desState, finishTime)
-                VALUES 
-            ('$_POST[desNo]','$_POST[stoNo]','$_POST[desState]', NOW())";
+        $sql="UPDATE waitingnum SET desConfirm='0' WHERE numID='$_POST[numID]'";
+
+        mysqli_query($con,$sql);
 
         if (!mysqli_query($con,$sql))
         {
         //die 'Error: ' . mysqli_error($con);
-                echo json_encode(array('rusult' => '1', 'data' => '添加失敗', 'error' => mysqli_error($con)));
-        //echo ('Error: ' . mysqli_error($con));
+        echo json_encode(array('rusult' => '1', 'data' => '添加失敗', 'error' => mysqli_error($con)));
+        echo ('Error: ' . mysqli_error($con));
         }else{
-        echo json_encode(array('rusult' => '0', 'data' => '添加成功'));
+        echo json_encode(array('rusult' => '0', 'data' => '修改成功'));
         }
         mysqli_close($con)
 ?>
