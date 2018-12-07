@@ -1,40 +1,58 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: access");
-header("Access-Control-Allow-Methods: GET");
-header("Access-Control-Allow-Credentials: true");
-header('Content-Type: application/json');
- 
-// include database and object files
-include_once '../config/database.php';
-include_once '../object/number.php';
- 
-// get database connection
-$database = new Database();
-$db = $database->getConnection();
- 
-// prepare product object
-$number = new Number($db);
- 
-// set ID property of product to be edited
-$number->robNo = isset($_GET['robNo']) ? $_GET['robNo'] : die();
- 
-// read the details of product to be edited
-$number->readNum();
- 
-// create array
-$number_arr = array(
-        "numID" => $number -> numID,
-        "numplate" => $number -> numplate,
-        "numTime" => $number -> numTime,
-        "robNo" => $number -> robNo,
-        "callState" => $number -> callState,
-        "handleState" => $number -> handleState,
-        "numTime" => $number -> numTime,
-        "endTime" => $number -> endTime,
-        "desNo" => $number -> desNo
-); 
+    // required headers
+    header("Access-Control-Allow-Origin: *");
+    header("Content-Type: application/json; charset=UTF-8");
+    
+    // include database and object files
+    include_once '../config/database.php';
+    include_once '../object/OverNum.php';
+    
+    // instantiate database and product object
+    $database = new Database();
+    $db = $database->getConnection();
+    
+    // initialize object
+    $OverNum = new OverNum($db);
+    
+    // query products
+    $stmt = $OverNum->readOverNum();
+    $num = $stmt->rowCount();
+    
+    // check if more than 0 record found
+    if($num>0){
+    
+        // products array
+        $stores_arr=array();
+        $stores_arr["records"]=array();
+    
+        // retrieve our table contents
+        // fetch() is faster than fetchAll()
+        // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            // extract row
+            // this will make $row['name'] to
+            // just $name only
+            extract($row);
+    
+            $store_item=array(
+                "numID" => $numID,
+                "robNo" => $robNo,
+                "desNo" => $desNo
+            );
 
-// make it json formatqc  
-print_r(json_encode($number_arr));
+            array_push($stores_arr["records"], $store_item);
+        }
+
+        //不要顯使重複的值
+        $stores_arr=array_unique($stores_arr);
+        
+        echo json_encode($stores_arr);
+    }
+    
+    else{
+        echo json_encode(
+            array("message" => "No products found.")
+    );
+    mysql_close($OverNum);
+}
 ?>
